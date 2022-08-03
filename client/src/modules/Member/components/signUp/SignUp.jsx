@@ -101,7 +101,7 @@ const SignUp = props => {
                 props.loading(false);
                 alert(err.message) //todo:: alert
             })
-        }//
+        }
 
         else {
             const statuses = Validation.validate(fields)
