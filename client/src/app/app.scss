@@ -1,0 +1,40 @@
+@import '../core/style/theme';
+@import '../core/style/imports';
+
+* {
+  font: normal 15px samim;
+}
+
+body {
+  direction: rtl;
+  margin: 0;
+  color: map_get($color, text-color);
+}
+
+a {
+  text-decoration: none;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-size: 1.3em;
+  color: #373737;
+  vertical-align: middle;
+}
+
+i.fa-solid,
+i.fa-regular, {
+  font-size: 20px;
+}
+
+input:focus,
+input:valid {
+  outline: none;
+}
+
+@media only screen and (min-width: 1280px) {
+  h2 {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+  }
+}
