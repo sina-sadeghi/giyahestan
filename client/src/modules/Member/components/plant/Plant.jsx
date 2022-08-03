@@ -10,7 +10,6 @@ import poster2 from '../../../../assets/image/11.jpg';
 import poster3 from '../../../../assets/image/12.jpg';
 import poster4 from '../../../../assets/image/13.jpg';
 import Image from '../../../../shared/image/Image';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const Plant = props => {
     const DESCRIPTION = {

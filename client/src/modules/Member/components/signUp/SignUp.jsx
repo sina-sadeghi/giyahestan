@@ -93,9 +93,16 @@ const SignUp = props => {
         if(passType === typesPass.login) {
             props.loading(true);
             account.signUpLogin(data).then(res => {
-                alert(res.message || 'شما وارد شدید') //todo:: alert todo::بنویسیم که شما لوگین شدین
-                props.loading(false);
-                Storage.setToken(res.Token)
+                const {token} = res
+                const user = {
+                    email: res.email,
+                    is_staff: res.is_staff,
+                    user_id: res.user_id,
+                }
+                alert(res.message)
+                props.loading(false)
+                Storage.setUser(user)
+                Storage.setToken(token)
             }).catch(err => {
                 console.error(err)
                 props.loading(false);
@@ -157,7 +164,7 @@ const SignUp = props => {
                             description={_.init('lbl_sign_up__username_description')}
                             status={fieldsStatus[0]}
                             value={fields[0].value}
-                            change={e => fieldsStatus[0].code !== statusField.loading ? updateValue(0, e.target.value) : null}
+                            change={e => fieldsStatus[0].code !== statusField.loading ? updateValue(0, e.target.value.trim()) : null}
                         />
 
                         {passType in [0, 1] &&
@@ -169,7 +176,7 @@ const SignUp = props => {
                             description={_.init(`lbl_sign_up__password_description___type_${passType}`)}
                             status={fieldsStatus[1]}
                             value={fields[1].value}
-                            change={e => updateValue(1, e.target.value)}
+                            change={e => updateValue(1, e.target.value.trim())}
                         />}
 
                         <Button type={passType in [0, 1] ? 'primary' : 'disabled'} action={action}>

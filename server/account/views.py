@@ -43,7 +43,7 @@ def signup_login(request):
                     toke=v2.ExpiringToken.objects.get_or_create(user=u)
                     EXPIRING_TOKEN_LIFESPAN = datetime.timedelta(days=2)
 
-                    return JsonResponse({"token":str(tok[0]),"token2":str(tok[0]),"email":u.email,"user id":u.id,"is_staff":u.is_staff,"message":"شما وارد شدید"})
+                    return JsonResponse({"token":str(tok[0]),"token2":str(tok[0]),"email":u.email,"user_id":u.id,"is_staff":u.is_staff,"message":"شما وارد شدید"})
                 else:
                     return Response({"message":"رمز عبور اشتباه است"},status=status.HTTP_400_BAD_REQUEST)
             except User.DoesNotExist:
