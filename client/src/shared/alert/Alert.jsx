@@ -21,7 +21,7 @@ const Alert = ({type, message, removeAlert}) => {
 
     const hidAlert = props => {
         setHidingAlert(true)
-        // alarmAlert = setTimeout(removeAlert, 5000)
+        alarmAlert = setTimeout(removeAlert, 5000)
     }
 
 

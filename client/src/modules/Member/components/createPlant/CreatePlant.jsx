@@ -61,6 +61,7 @@ const CreatePlant = props => {
     const [descriptionViki, setDescriptionViki] = useState('')
     const [tags, setTags] = useState([])
     const [images, setImages] = useState([])
+    const [imagesUrl, setImagesUrl] = useState([])
 
     const [maintenanceList, setMaintenanceList] = useState([...maintenanceListData])
 
@@ -80,6 +81,7 @@ const CreatePlant = props => {
             const value = linkFileRef.current.value;
 
             if(value.includes(':') && value[0].toLowerCase() !== value[0].toUpperCase()) {
+                setImagesUrl([...imagesUrl, value])
                 setImages([...images, value])
                 linkFileRef.current.value = ''
             }
@@ -87,20 +89,27 @@ const CreatePlant = props => {
 
         if (type === 'errorImage') {
             props.alert({type: 'err', message: 'عکس وارد شده مشکل دارد.'})
-            setImages(images.filter((img, ind) => ind !== index))
+            setImagesUrl(images.filter((img, ind) => ind !== index))
         }
+    }
+
+    const setImage = e => {
+        setImages([...images, e.target.files[0]])
+        setImagesUrl([...imagesUrl, URL.createObjectURL(e.target.files[0])])
     }
 
     const showPreviewPlant = e => {
         e.preventDefault();
+        console.log(images.filter((i, index) => index !== 0))
+        const formData = new FormData();
+        formData.append('title', name);
+        formData.append('des', description);
+        formData.append('poster', images[0]);
+        formData.append('images', images.filter((i, index) => index !== 0));
+
 
         if(name.length && fullName.length && description.length && images.length) {
-            axios.post('http://127.0.0.1:8000/plants/createplant/', {
-                title: name,
-                des: description,
-                poster: images[0],
-                images: [...images.filter((i, index) => index !== 0)]
-            })
+            axios.post('http://127.0.0.1:8000/plants/createplant/', formData)
             alert('نمایش اولیه ی گیاه')
             // send to server
         }
@@ -172,7 +181,7 @@ const CreatePlant = props => {
         <div className={'required-arm'}>{'* یعنی اجباری'}</div>
         <form className={'form'}>
             <span className={'name filed-text'}>
-                <input value={name} className={'name__input'} onChange={e => setName(e.target.value.trim())}/>
+                <input required value={name} className={'name__input'} onChange={e => setName(e.target.value.trim())}/>
                 <label className={'name__label'}>{'* نام کوتاه'}</label>
             </span>
             <div className={'tag'}>
@@ -180,29 +189,32 @@ const CreatePlant = props => {
                 <div className={'tag__box'} onBlur={() => setOpenBoxTags(false)} tabIndex={0}>{initTagBox()}</div>
             </div>
             <div className={'full-name filed-text'}>
-                <input value={fullName} onChange={e => setFullName(e.target.value.trim())} />
+                <input required value={fullName} onChange={e => setFullName(e.target.value.trim())} />
                 <label>{'* نام کامل'}</label>
             </div>
             <div className={'description'}>
                 <div className={'filed-text'}>
-                    <textarea value={description} onChange={e => setDescription(e.target.value.trim())}/>
+                    <textarea required value={description} onChange={e => setDescription(e.target.value.trim())}/>
                     <label>{'* توضیحات'}</label>
                 </div>
                 <div className={'description__viki'}>
                     <span>{'لینک ویکی پدیا'}</span>
-                    <input value={descriptionViki} type="url" dir={'ltr'}
+                    <input required value={descriptionViki} type="url" dir={'ltr'}
                            onChange={e => setDescriptionViki(e.target.value.trim())}/>
                     <i className="fa-solid fa-check"/>
                 </div>
             </div>
             <div className={'images'}>
                 <label className={'image__label'}>{'* تصویر ها (حداقل 1 و حداکثر 4)'}</label>
-                <input hidden type={'file'} ref={inputFileRef} accept="image/png, image/jpeg"
-                       onChange={e => setImages([...images, URL.createObjectURL(e.target.files[0])])}/>
+                <input type={'file'} ref={inputFileRef} accept="image/png, image/jpeg"
+                       onChange={setImage}/>
                 <div className={'images__boxes'}>
-                    {images.map((image, index) => <span>
+                    {imagesUrl.map((image, index) => <span>
                         <i className="fa-regular fa-xmark image__close"
-                           onClick={() => setImages(images.filter((img, ind) => ind !== index))}/>
+                           onClick={() => {
+                               setImages(images.filter((img, ind) => ind !== index))
+                               setImagesUrl(imagesUrl.filter((img, ind) => ind !== index))
+                           }}/>
                         <img src={image} alt={`image-${index}`} className={'image-item'}
                              onError={e => setUrlImage(e, 'errorImage', index)}/>
                     </span>)}
@@ -211,7 +223,7 @@ const CreatePlant = props => {
                     <div className={'image__add'} onClick={() => inputFileRef.current.click()}>
                         <i className="fa-thin fa-circle-plus"/>
                         <span className={'image__add-box'} onClick={e => e.stopPropagation()}>
-                            <input type={"url"} dir={'ltr'}
+                            <input required type={"url"} dir={'ltr'}
                                    ref={linkFileRef} onKeyDown={e => setUrlImage(e, 'input')}/>
                             <i className={'fa-solid fa-check'} onClick={e => setUrlImage(e, 'button')}/>
                         </span>
