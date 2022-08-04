@@ -1,21 +1,35 @@
 import './loading.scss';
-import React from 'react';
+import React, {useEffect} from 'react';
+import ScrollBar from '../../core/services/Scrollable';
 
 const Loading = type => {
 
-    // with Redux set loading param
-    //ToDo:: لودینک app.js رو با لودینگ دیگر صفحات و با لودینگ fetch شدن اطلاعات از سرور جدا کنید
+    useEffect(() => {
+        ScrollBar(true)
 
+        return function cleanup() {
+            ScrollBar(false)
+        }
+    }, [])
+
+
+    const initLoading = () => {
+        return <>
+            <div className="wrapper">
+                <div className="circle"/>
+                <div className="circle"/>
+                <div className="circle"/>
+                <div className="shadow"/>
+                <div className="shadow"/>
+                <div className="shadow"/>
+            </div>
+        </>
+    }
 
     return (
-        <div className={'loading'}>
+        <div className={'loading'} style={{top: window.scrollY}}>
             <div className={'loading__container'}>
-                <div className="lds-ring">
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                </div>
+                {initLoading()}
             </div>
         </div>
     )

@@ -4,7 +4,7 @@
   .title {
     text-align: center;
     font-weight: 500;
-    color: #20cb20;
+    color: #0fc60f;
     border-bottom: 2px solid;
     width: 332px;
     margin: 17px auto;
@@ -12,14 +12,15 @@
   }
 
   .required-arm {
-    margin: 24px 45px 26px 0;
+    text-align: right;
+    margin: 24px 100px 26px 0;
     font-size: 16px;
     color: red;
   }
 
   .form {
     display: inline-block;
-    width: min(100%, 1000px);
+    width: min(100%, 1200px);
     margin: auto;
     text-align: right;
     font-size: 15px;
@@ -410,7 +411,39 @@
     border-color: transparent;
   }
 
+  .maintenance__reproduce-label {
+    margin-right: 10px;
+  }
 
+  .maintenance__reproduce {
+    cursor: pointer;
+    width: 150px;
+    text-align: center;
+    border: 2px solid #a7a7a7;
+    border-radius: 5px;
+    padding: 1px 0;
+
+      div div {padding: 2px 0;}
+      div div:hover {background: #eeeeee;}
+  }
+
+  .maintenance__reproduce-select {
+    padding: 2px 0;
+    background: #e1e1e1;
+  }
+
+  .send-plant {
+    margin: 100px auto 20px;
+    display: block;
+    padding: 5px 31px;
+    font-size: 21px;
+    background: #cdf9c9;
+    border-radius: 4px;
+    border: 2px solid #64b364;
+    color: #059905;
+    font-weight: 600;
+    cursor: pointer;
+  }
 
 
 }

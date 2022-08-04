@@ -99,14 +99,14 @@ const SignUp = props => {
                     is_staff: res.is_staff,
                     user_id: res.user_id,
                 }
-                alert(res.message)
+                props.alert({type: 'suc', message: res.message})
                 props.loading(false)
                 Storage.setUser(user)
                 Storage.setToken(token)
             }).catch(err => {
                 console.error(err)
                 props.loading(false);
-                alert(err.message) //todo:: alert
+                props.alert({type: 'err', message: err.message})
             })
         }
 
@@ -116,13 +116,13 @@ const SignUp = props => {
             if (!statuses.find(_status => _status.code === statusField.error)) {
                 props.loading(true);
                 account.signUpLogin(data).then(res => {
-                    alert(res.message);   //todo:: بعد از امکان ارسال ایمیل این قسمت review شود
+                    props.alert({type: 'suc', message: res.message})  //todo:: بعد از امکان ارسال ایمیل این قسمت review شود
                     setStep(2)
                     props.loading(false);
                 }).catch(err => {
                     console.error(err)
                     props.loading(false);
-                    alert(err.message) //todo:: alert
+                    props.alert({type: 'err', message: err.message})
                 })
             }
         }
@@ -137,13 +137,13 @@ const SignUp = props => {
 
         props.loading(true);
         account.signUpLogin(data).then(res => {
-            alert(res.message || 'شما وارد شدید') //todo:: alert todo::بنویسیم که شما لوگین شدین
+            props.alert({type: 'suc', message: res.message})
             props.loading(false);
             Storage.setToken(res.Token)
         }).catch(err => {
             console.error(err)
             props.loading(false);
-            alert(err.message) //todo:: alert
+            props.alert({type: 'err', message: err.message})
         })
     }
 

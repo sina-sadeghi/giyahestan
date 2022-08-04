@@ -31,6 +31,12 @@ input:valid {
   outline: none;
 }
 
+.no-scroll {
+  margin: 0;
+  height: 100%;
+  overflow: hidden
+}
+
 @media only screen and (min-width: 1280px) {
   h2 {
     font-size: 30px;

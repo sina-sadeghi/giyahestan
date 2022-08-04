@@ -7,17 +7,18 @@ import Alert from "../shared/alert/Alert";
 export default (props) => {
 
     const [loading, setLoading] = useState(false)
+    const [alert, setAlert] = useState(false)
 
     // TODO: پس از اتمام storage =>
     // اگر لوگین بود به فحه ی لوگین و ثبت نام دسترسی نداشته باشد
     // redirect to home
 
     return (
-        <div className={"container"}>
+        <div>
+            {loading && <Loading/>}
             <MemberLayout {...props}>
-                {!!loading && <Loading/>}
-                <Alert/>
-                <props.Component loading = {state => setLoading(state)}/>
+                {!!alert && <Alert {...alert} removeAlert={() => setAlert(false)}/>}
+                <props.Component loading = {state => setLoading(!!state)} alert={props => setAlert(props)}/>
             </MemberLayout>
         </div>
     )

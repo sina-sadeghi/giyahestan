@@ -22,9 +22,6 @@ const Plant = props => {
     const [poster, setPoster] = useState(poster1)
     const [descriptionTab, setDescriptionTab] = useState(DESCRIPTION.DESCRIPTION)
 
-    const sina = () => {
-
-    }
 
     const setPlantScore = state => {
         score === state ? setScore(false) : setScore(state)
