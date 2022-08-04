@@ -205,8 +205,8 @@ const CreatePlant = props => {
                 </div>
             </div>
             <div className={'images'}>
-                <label className={'image__label'}>{'* تصویر ها (حداقل 1 و حداکثر 4)'}</label>
-                <input type={'file'} ref={inputFileRef} accept="image/png, image/jpeg"
+                <label className={'image__label'}>{'* تصویر ها (1 پوستر و تا 3 عکس آزاد)'}</label>
+                <input type={'file'} hidden ref={inputFileRef} accept="image/png, image/jpeg"
                        onChange={setImage}/>
                 <div className={'images__boxes'}>
                     {imagesUrl.map((image, index) => <span>
