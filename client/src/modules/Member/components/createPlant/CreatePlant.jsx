@@ -53,6 +53,7 @@ const CreatePlant = props => {
     ]
 
     const inputFileRef = useRef(null)
+    const inputPostRef = useRef(null)
     const linkFileRef = useRef(null)
 
     const [name, setName] = useState('')
@@ -60,8 +61,10 @@ const CreatePlant = props => {
     const [description, setDescription] = useState('')
     const [descriptionViki, setDescriptionViki] = useState('')
     const [tags, setTags] = useState([])
+    const [poster, setPoster] = useState(false)
+    const [posterLink, setPosterLink] = useState('')
     const [images, setImages] = useState([])
-    const [imagesUrl, setImagesUrl] = useState([])
+    const [imageLink, setImageLink] = useState('')
 
     const [maintenanceList, setMaintenanceList] = useState([...maintenanceListData])
 
@@ -70,58 +73,77 @@ const CreatePlant = props => {
 
     const [selectReproduce, setSelectReproduce] = useState(reproduceList[0])
 
-    const onClickCheckBoxMaintenance = index => {
+    const editMaintenance = (e, index, type) => {
         const maintenance = maintenanceList;
-        maintenance[index].enable = !maintenance[index].enable;
+        if (type === 'button')
+            maintenance[index].enable = !maintenance[index].enable;
+        else if (type === 'input')
+            maintenance[index].text = e.target.value;
         setMaintenanceList([...maintenance]);
     }
 
-    const setUrlImage = (e, type, index) => {
-        if ((type === 'input' && e.key === 'Enter') || type === 'button') {
-            const value = linkFileRef.current.value;
-
-            if(value.includes(':') && value[0].toLowerCase() !== value[0].toUpperCase()) {
-                setImagesUrl([...imagesUrl, value])
-                setImages([...images, value])
-                linkFileRef.current.value = ''
-            }
-        }
-
-        if (type === 'errorImage') {
-            props.alert({type: 'err', message: 'عکس وارد شده مشکل دارد.'})
-            setImagesUrl(images.filter((img, ind) => ind !== index))
+    const setLinkImage = (e, filed, type) => {
+        if (type === 'poster' && (filed === 'button' || e.key === 'Enter')) {
+            setPoster(posterLink)
+            setPosterLink('')
+        } else if (type === 'image' && (filed === ' button' || e.key === 'Enter')) {
+            setImages([...images, imageLink])
+            setImageLink('')
         }
     }
 
-    const setImage = e => {
-        setImages([...images, e.target.files[0]])
-        setImagesUrl([...imagesUrl, URL.createObjectURL(e.target.files[0])])
+    const errorImage = type => {
+        props.alert({type: 'err', message: 'تصویر انتخاب شده مشکل دارد.'})
+        if (type === 'poster')
+            setPoster(false)
+        else if (type === 'image')
+            setImages(images.pop())
+    }
+
+    const validationLink = link => {
+        let url;
+        try {
+            url = new URL(link);
+        } catch (_) {
+            return false;
+        }
+
+        return url.protocol === "http:" || url.protocol === "https:";
     }
 
     const showPreviewPlant = e => {
         e.preventDefault();
-        console.log(images.filter((i, index) => index !== 0))
+        console.log(images)
         const formData = new FormData();
-        formData.append('title', name);
-        formData.append('des', description);
-        formData.append('poster', images[0]);
-        formData.append('images', images.filter((i, index) => index !== 0));
+        const formData2 = new FormData();
+        formData.append('title', name.trim());
+        formData.append('des', description.trim());
+        formData.append('poster', poster);
+        formData.append('images', images);
+
+        formData2.append('title', name.trim());
+        formData2.append('des', description.trim());
+        formData2.append('poster', poster);
+        formData2.append('images', images);
+
+        formData2.append('full_name', fullName.trim());
+        formData2.append('maintenance', maintenanceList);
+        formData2.append('reproduce', selectReproduce);
 
 
-        if(name.length && fullName.length && description.length && images.length) {
+        if (name.length && fullName.length && description.length && images.length) {
             axios.post('http://127.0.0.1:8000/plants/createplant/', formData)
+            axios.post('http://127.0.0.1:8000/plants/createplant2/', formData2)
             alert('نمایش اولیه ی گیاه')
             // send to server
-        }
-
-        else {
-            if(!name.length)
+        } else {
+            if (!name.length)
                 props.alert({type: 'err', message: 'فیلد نام خالی است'})
-            else if(!fullName.length)
+            else if (!fullName.length)
                 props.alert({type: 'err', message: 'فیلد نام کامل خالی است'})
-            else if(!description.length)
+            else if (!description.length)
                 props.alert({type: 'err', message: 'فیلد توضیحات خالی است'})
-            else if(!images.length)
+            else if (!images.length)
                 props.alert({type: 'err', message: 'پوستر برای گیاه درج نشده است'})
 
             /*
@@ -167,11 +189,11 @@ const CreatePlant = props => {
     const initMaintenance = (props, index) => {
         return <div className={'maintenance__item-box'}>
             <label className="maintenance__item-checkbox">
-                <input checked={props.enable} type="checkbox" onClick={e => onClickCheckBoxMaintenance(index)}/>
+                <input checked={props.enable} type="checkbox" onClick={e => editMaintenance(e, index, 'button')}/>
                 <div className="maintenance__checkmark"/>
             </label>
             <span>{props.type}</span>
-            <input type={'text'}
+            <input type={'text'} value={props.text} onChange={e => editMaintenance(e, index, 'input')}
                    className={`maintenance__item-input ${props.enable ? '' : 'maintenance__item-input-hidden'}`}/>
         </div>
     }
@@ -181,7 +203,7 @@ const CreatePlant = props => {
         <div className={'required-arm'}>{'* یعنی اجباری'}</div>
         <form className={'form'}>
             <span className={'name filed-text'}>
-                <input required value={name} className={'name__input'} onChange={e => setName(e.target.value.trim())}/>
+                <input required value={name} className={'name__input'} onChange={e => setName(e.target.value)}/>
                 <label className={'name__label'}>{'* نام کوتاه'}</label>
             </span>
             <div className={'tag'}>
@@ -189,46 +211,65 @@ const CreatePlant = props => {
                 <div className={'tag__box'} onBlur={() => setOpenBoxTags(false)} tabIndex={0}>{initTagBox()}</div>
             </div>
             <div className={'full-name filed-text'}>
-                <input required value={fullName} onChange={e => setFullName(e.target.value.trim())} />
+                <input required value={fullName} onChange={e => setFullName(e.target.value)}/>
                 <label>{'* نام کامل'}</label>
             </div>
             <div className={'description'}>
                 <div className={'filed-text'}>
-                    <textarea required value={description} onChange={e => setDescription(e.target.value.trim())}/>
+                    <textarea required value={description} onChange={e => setDescription(e.target.value)}/>
                     <label>{'* توضیحات'}</label>
                 </div>
                 <div className={'description__viki'}>
                     <span>{'لینک ویکی پدیا'}</span>
                     <input required value={descriptionViki} type="url" dir={'ltr'}
-                           onChange={e => setDescriptionViki(e.target.value.trim())}/>
+                           onChange={e => setDescriptionViki(e.target.value)}/>
                     <i className="fa-solid fa-check"/>
                 </div>
             </div>
             <div className={'images'}>
-                <label className={'image__label'}>{'* تصویر ها (1 پوستر و تا 3 عکس آزاد)'}</label>
-                <input type={'file'} hidden ref={inputFileRef} accept="image/png, image/jpeg"
-                       onChange={setImage}/>
+                <label className={'image__label'}>{'*پوستر'}</label>
+                <input type={'file'} hidden ref={inputPostRef}
+                       accept={"image/png, image/jpeg"} onChange={e => setPoster(e.target.files[0])}/>
                 <div className={'images__boxes'}>
-                    {imagesUrl.map((image, index) => <span>
+                    {!!poster && <span>
+                        <i className="fa-regular fa-xmark image__close" onClick={() => setPoster(false)}/>
+                        <img src={typeof poster.type === 'object' ? poster : URL.createObjectURL(poster)}
+                             alt={'poster'} className={'image-item'} onError={e => errorImage('poster')}/>
+                    </span>}
+
+                    {!poster && <div className={'image__add'} onClick={() => inputPostRef.current.click()}>
+                        <i className="fa-thin fa-circle-plus"/>
+                        <span className={`image__add-box ${validationLink(posterLink) ? 'mage__add-box_valid' : ''}`}
+                              onClick={e => e.stopPropagation()}>
+                            <input required type={"url"} dir={'ltr'} onChange={e => setPosterLink(e.target.value)}
+                                   value={posterLink} onKeyDown={e => setLinkImage(e, 'input', 'poster')}/>
+                            <i className={'fa-solid fa-check'} onClick={e => setLinkImage(e, 'button', 'poster')}/>
+                        </span>
+                    </div>}
+                </div>
+            </div>
+            <div className={'images'}>
+                <label className={'image__label'}>{'تصویر'}</label>
+                <input type={'file'} hidden ref={inputFileRef}
+                       accept="image/png, image/jpeg" onChange={e => setImages([...images, e.target.files[0]])}/>
+                <div className={'images__boxes'}>
+                    {images.map((image, index) => <span>
                         <i className="fa-regular fa-xmark image__close"
-                           onClick={() => {
-                               setImages(images.filter((img, ind) => ind !== index))
-                               setImagesUrl(imagesUrl.filter((img, ind) => ind !== index))
-                           }}/>
-                        <img src={image} alt={`image-${index}`} className={'image-item'}
-                             onError={e => setUrlImage(e, 'errorImage', index)}/>
+                           onClick={() => setImages(images.filter((img, ind) => ind !== index))}/>
+                        <img src={typeof poster.type === 'object' ? image : URL.createObjectURL(image)}
+                             alt={`image-${index}`} className={'image-item'} onError={e => errorImage('image')}/>
                     </span>)}
 
-                    {images.length < 4 &&
+                    {images.length < 3 &&
                     <div className={'image__add'} onClick={() => inputFileRef.current.click()}>
                         <i className="fa-thin fa-circle-plus"/>
-                        <span className={'image__add-box'} onClick={e => e.stopPropagation()}>
-                            <input required type={"url"} dir={'ltr'}
-                                   ref={linkFileRef} onKeyDown={e => setUrlImage(e, 'input')}/>
-                            <i className={'fa-solid fa-check'} onClick={e => setUrlImage(e, 'button')}/>
+                        <span className={`image__add-box ${validationLink(imageLink) ? 'mage__add-box_valid' : ''}`}
+                              onClick={e => e.stopPropagation()}>
+                            <input required type={"url"} dir={'ltr'} onChange={e => setImageLink(e.target.value)}
+                                   value={imageLink} onKeyDown={e => setLinkImage(e, 'input', 'image')}/>
+                            <i className={'fa-solid fa-check'} onClick={e => setLinkImage(e, 'button', 'image')}/>
                         </span>
-                    </div>
-                    }
+                    </div>}
                 </div>
             </div>
             <div className={'maintenance'}>
@@ -240,7 +281,7 @@ const CreatePlant = props => {
                         <span className={'maintenance__reproduce-label'}>{'نحوه تکثیر'}</span>
 
                         <span onClick={() => setDropDoneReproduce(!dropDoneReproduce)} tabIndex={0}
-                              className={'maintenance__reproduce'} /*onBlur={() => setDropDoneReproduce(false)}*/>
+                              className={'maintenance__reproduce'} onBlur={() => setDropDoneReproduce(false)}>
                             <div className={'maintenance__reproduce-select'}>{selectReproduce}</div>
                             {dropDoneReproduce && <>
                                 <div className={'maintenance__reproduce-box'}>

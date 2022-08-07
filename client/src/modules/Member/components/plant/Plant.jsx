@@ -1,4 +1,5 @@
 import './plant.scss';
+import './plant-device.scss';
 import React, {useState} from 'react';
 import plant from '../../../../assets/image/5.jpg';
 import similarPlant1 from '../../../../assets/image/6.jpg';
