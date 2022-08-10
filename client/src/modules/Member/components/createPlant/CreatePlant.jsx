@@ -111,29 +111,27 @@ const CreatePlant = props => {
         return url.protocol === "http:" || url.protocol === "https:";
     }
 
+
     const showPreviewPlant = e => {
         e.preventDefault();
-        console.log(images)
+
+
         const formData = new FormData();
-        const formData2 = new FormData();
-        formData.append('title', name.trim());
+
+        formData.append('short_name', name.trim());
+        formData.append('title', fullName.trim());
         formData.append('des', description.trim());
+        formData.append('WPlink', descriptionViki.trim());
         formData.append('poster', poster);
-        formData.append('images', images);
-
-        formData2.append('title', name.trim());
-        formData2.append('des', description.trim());
-        formData2.append('poster', poster);
-        formData2.append('images', images);
-
-        formData2.append('full_name', fullName.trim());
-        formData2.append('maintenance', maintenanceList);
-        formData2.append('reproduce', selectReproduce);
+        formData.append('image1', images[0] || null);
+        formData.append('image2', images[1] || null);
+        formData.append('image3', images[2] || null);
+        formData.append('maintenance', JSON.stringify(maintenanceList));
+        formData.append('reproduce', selectReproduce);
 
 
         if (name.length && fullName.length && description.length && images.length) {
             axios.post('http://127.0.0.1:8000/plants/createplant/', formData)
-            axios.post('http://127.0.0.1:8000/plants/createplant2/', formData2)
             alert('نمایش اولیه ی گیاه')
             // send to server
         } else {
