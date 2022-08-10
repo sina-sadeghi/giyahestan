@@ -125,6 +125,7 @@ const CreatePlant = props => {
         const formData = new FormData();
 
         formData.append('short_name', name.trim());
+        formData.append('tags', '[]');
         formData.append('title', fullName.trim());
         formData.append('des', description.trim());
         formData.append('WPlink', descriptionViki.trim());
@@ -136,7 +137,7 @@ const CreatePlant = props => {
         formData.append('reproduce', 2);
 
 
-        if (name.length && fullName.length && description.length && images.length) {
+        if (name.length && fullName.length && description.length && images) {
             axios.post('http://127.0.0.1:8000/plants/createplant/', formData)
             alert('نمایش اولیه ی گیاه')
             // send to server
@@ -147,7 +148,7 @@ const CreatePlant = props => {
                 props.alert({type: 'err', message: 'فیلد نام کامل خالی است'})
             else if (!description.length)
                 props.alert({type: 'err', message: 'فیلد توضیحات خالی است'})
-            else if (!images.length)
+            else if (!poster)
                 props.alert({type: 'err', message: 'پوستر برای گیاه درج نشده است'})
 
             /*

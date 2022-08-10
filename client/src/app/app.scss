@@ -3,6 +3,18 @@
 
 * {
   font: normal 15px samim;
+
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #ccc;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #666;
+  }
 }
 
 body {

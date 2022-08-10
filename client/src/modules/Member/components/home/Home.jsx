@@ -32,7 +32,6 @@ const Home = props => {
 
     const plantList = (title) => {
         return (<>
-            <hr/>
             <div className="similar-plant">
                 <p className="similar-plant__title">{title}</p>
                 {initSimilarPlant('گیاه ساکولنت تاپسی توروی', similarPlant1, 'جدید')}
@@ -47,6 +46,13 @@ const Home = props => {
     }
 
     return <sction className={'home'}>
+        <div className={'first-section'}>
+            <h2>{'گیاهستان'}</h2>
+            <p>{'هر اطلاعاتی در مورد گیاهان رو اینجا پیدا کن'}</p>
+        </div>
+        <div className={'board'}>
+            <p>{'این سایت به زودی فعالیت خود را آغاز خواهد کرد'}</p>
+        </div>
         {plantList('گیاهان مرتبط')}
         {plantList('گیاهان جدید')}
         {plantList('گیاهان پرطرفدار')}
