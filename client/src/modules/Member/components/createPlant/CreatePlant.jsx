@@ -133,7 +133,7 @@ const CreatePlant = props => {
         formData.append('image2', images[1] || null);
         formData.append('image3', images[2] || null);
         formData.append('maintenance', JSON.stringify(maintenanceServer));
-        formData.append('reproduce', selectReproduce);
+        formData.append('reproduce', 2);
 
 
         if (name.length && fullName.length && description.length && images.length) {
