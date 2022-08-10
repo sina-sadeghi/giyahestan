@@ -83,10 +83,11 @@ const CreatePlant = props => {
     }
 
     const setLinkImage = (e, filed, type) => {
-        if (type === 'poster' && (filed === 'button' || e.key === 'Enter')) {
+        if (type === 'poster' && (filed === 'button' || e.code === 'Enter')) {
             setPoster(posterLink)
             setPosterLink('')
-        } else if (type === 'image' && (filed === ' button' || e.key === 'Enter')) {
+        } else if (type === 'image' && (filed === 'button' || e.code === 'Enter')) {
+            e.preventDefault();
             setImages([...images, imageLink])
             setImageLink('')
         }
@@ -231,7 +232,7 @@ const CreatePlant = props => {
                 <div className={'images__boxes'}>
                     {!!poster && <span>
                         <i className="fa-regular fa-xmark image__close" onClick={() => setPoster(false)}/>
-                        <img src={typeof poster.type === 'object' ? poster : URL.createObjectURL(poster)}
+                        <img src={typeof poster === 'object' ?  URL.createObjectURL(poster) : poster}
                              alt={'poster'} className={'image-item'} onError={e => errorImage('poster')}/>
                     </span>}
 
@@ -254,7 +255,7 @@ const CreatePlant = props => {
                     {images.map((image, index) => <span>
                         <i className="fa-regular fa-xmark image__close"
                            onClick={() => setImages(images.filter((img, ind) => ind !== index))}/>
-                        <img src={typeof poster.type === 'object' ? image : URL.createObjectURL(image)}
+                        <img src={typeof image === 'object' ? URL.createObjectURL(image) : image}
                              alt={`image-${index}`} className={'image-item'} onError={e => errorImage('image')}/>
                     </span>)}
 
