@@ -117,6 +117,11 @@ const CreatePlant = props => {
         e.preventDefault();
 
 
+        const maintenanceServer = []
+        for(let i in [0, 1, 2, 3])
+            maintenanceList[i].enable && maintenanceList[i].text.length ?
+                maintenanceServer.push(maintenanceList[i].text) : maintenanceServer.push(null)
+
         const formData = new FormData();
 
         formData.append('short_name', name.trim());
@@ -127,7 +132,7 @@ const CreatePlant = props => {
         formData.append('image1', images[0] || null);
         formData.append('image2', images[1] || null);
         formData.append('image3', images[2] || null);
-        formData.append('maintenance', JSON.stringify(maintenanceList));
+        formData.append('maintenance', JSON.stringify(maintenanceServer));
         formData.append('reproduce', selectReproduce);
 
 
