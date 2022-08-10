@@ -11,14 +11,17 @@ from plants import views as v
 # router=routers.DefaultRouter()
 # router.register(r'',CreatePlant,'plants2')
 
-app_name="aa"
+app_name="giyahestan"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('creator/',views.getcreator, name='home'),
+    path('home/',views.home,name="home"),
+    # path('creator/',views.getcreator, name='home'),
     path('plants/plants_list',v.plants_list.as_view()),
+    path('plants/p', v.p),
     path('account/',include('account.urls')),
     path('plants/createplant/', v.CreatePlant.as_view(), name='create'),
     path("plants/plant/", v.seetextofurl, name="ss"),
+    path("tag/",v.tagslist,name="tags")
 ]
 

@@ -1,7 +1,25 @@
 import datetime
+import yagmail
+from django.contrib.auth import get_user_model
+from django.contrib.sites.shortcuts import get_current_site
+from django.core import mail
+from django.core.mail import BadHeaderError, send_mail
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.mail import EmailMessage
+
+import pytz
+from django.template.loader import render_to_string
+
+from .tokens import account_activation_token
+
 from django.core.mail.backends import smtp
 from django.shortcuts import render, redirect, HttpResponse
-from rest_framework import status, permissions, authentication, exceptions, views
+from django.utils.encoding import force_bytes, force_str
+
+
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+from rest_framework import status, permissions, exceptions, views #,authentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.generics import CreateAPIView, GenericAPIView
@@ -18,8 +36,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 import smtplib, ssl
 import pywhatkit
-from rest_framework_expiring_authtoken import views as v2
-
+# from rest_framework_expiring_authtoken import views as v2
+from plants.models import Tag
 
 
 def home_accounts(request):
@@ -28,6 +46,18 @@ def home_accounts(request):
 
 @api_view(["POST","GET"])
 def signup_login(request):
+    updated_request = request.data.copy()
+    updated_request.update(
+        {
+            'password2': request.data["password"],
+            'password1': request.data["password"],
+            'username': request.data["email"]
+        }
+    )
+
+
+
+
     if request.method == 'POST':
         if "password" not in request.data:
 
@@ -39,24 +69,42 @@ def signup_login(request):
             try:
                 u=User.objects.get(username=request.data["email"])
                 if u.check_password(request.data["password"]):
-                    tok=Token.objects.get_or_create(user=u)
-                    toke=v2.ExpiringToken.objects.get_or_create(user=u)
-                    EXPIRING_TOKEN_LIFESPAN = datetime.timedelta(days=2)
-
-                    return JsonResponse({"token":str(tok[0]),"token2":str(tok[0]),"email":u.email,"user_id":u.id,"is_staff":u.is_staff,"message":"شما وارد شدید"})
+                    #set expiry time for authtoken customize
+                    # utc_now=datetime.datetime.utcnow()
+                    # utc_now=utc_now.replace(tzinfo=pytz.utc)
+                    # result=Token.objects.filter(user=u,created__lt=utc_now-datetime.timedelta(seconds=30)).delete()
+                    token =Token.objects.get_or_create(user=u)
+                    # user=authentication(request,username=request.data["email"],password=request.data["password"])
+                    return JsonResponse({"token":str(token[0]),"email":u.email,"user_id":u.id,"is_staff":u.is_staff,"message":"شما وارد شدید"})
                 else:
                     return Response({"message":"رمز عبور اشتباه است"},status=status.HTTP_400_BAD_REQUEST)
             except User.DoesNotExist:
-            # send_mail(
-            #     "confirm code",
-            #     'your code is 4786',
-            #     settings.EMAIL_HOST_USER,
-            #     ["lmsy032@gmail.com"],
-            #     fail_silently=False,
-            #           )
-                s=UserSerializer(data=request.data)
-                s.create(request.data)
-            return Response({"message":"شما ثبت نام شدید"},status=status.HTTP_201_CREATED)
+                form=UserSerializer(data=updated_request)
+                if form.is_valid():
+
+
+                    global user
+                    user=form.save(commit=False)
+                    user=user
+                    user.is_active = False
+                    current_site = get_current_site(request)
+                    mail_subject = 'لینک فعال سازی گیاهستان'
+
+                    message = render_to_string('acc_active_email.html', {
+                        'user': user.email,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': account_activation_token.make_token(user),
+                    })
+                    email = EmailMessage(
+                        mail_subject, message, to=["azmepm@gmail.com"]
+                    )
+                    email.send()
+                    return Response({"message":"لینک فعال‌سازی به ایمیل شما ارسال شد"})
+                else:
+                    return Response({"error":"مقادیر داده شده ناقص است"},status=status.HTTP_400_BAD_REQUEST)
+            #     s.create(request.data)
+            # return Response({"message":"شما ثبت نام شدید"},status=status.HTTP_201_CREATED)
 
 
 
@@ -78,19 +126,105 @@ class MyView(GenericAPIView):
         return HttpResponse("user is login")
 
 
+
+
 @api_view(["POST","GET"])
 def tel(request):
+    sender_email = "lmsy032@gmail.com"
+    password = "mohsenmlg"
+    res="azmepm@gmail.com"
+    # yag = yagmail.SMTP(sender_email, password)
+    # yag.send("azmepm@gmail.com","hi", "text is")
+    # return HttpResponse("OKe")
 
-    if request.method == 'GET':
 
-        if not request.user.email('@gmail.com'):
-            return HttpResponse("gmaile")
+    smtp_server = "smtp.gmail.com"
+    port = 587  # For starttls
+    subject="hi"
+    message="thrtreefc fdfdfv dfdf "
+    # Create a secure SSL context
 
+    email = EmailMessage(subject, message, to=[res])
+    email.send()
+
+
+    # connection = mail.get_connection()
+    # connection.open()
+    # email1 = mail.EmailMessage(
+    #     subject,
+    #     message,
+    #     sender_email,
+    #     [res],
+    #     connection=connection,
+    # )
+    # email1.send()
+    # # connection.send_messages(email1)
+    # connection.close()
+    #
+    # with mail.get_connection() as connection:
+    #     mail.EmailMessage(
+    #         subject, message, sender_email, [res],
+    #         connection=connection,
+    #     ).send()
+
+
+
+
+
+
+
+
+
+    if request.data["email"]:
         try:
-            server = smtplib.SMTP('smtp.gmail.com', 587)
-            server.ehlo()
-            server.starttls()
 
-            return HttpResponse("ok!")
-        except:
-            return HttpResponse("bad")
+
+
+            send_mail(subject, message, sender_email, ['azmepm@gmail.com'])
+            print("okeeeeeeeeee")
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
+        return HttpResponse('hello')
+    else:
+        # In reality we'd use a form class
+        # to get proper validation errors.
+        return HttpResponse('Make sure all fields are entered and valid.')
+
+
+
+@api_view(["POST","GET"])
+def activate(request, uidb64, token):
+    User = get_user_model()
+    global user
+    user
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        # user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        token = Token.objects.get_or_create(user=user)
+        a=HttpResponse("ok shod")
+        # a.set_cookie()
+        a=a
+
+        b=redirect("account:home2")
+        dic={"token":str(token[0]),"email":user.email,"user_id":user.id,"is_staff":user.is_staff}
+
+        b.set_cookie("user",dic)
+
+        return b
+    else:
+        return HttpResponse('Activation link is invalid!')
+
+
+@api_view(["POST","GET"])
+def gene(request):
+    pass
+
+
+
+
+
