@@ -138,7 +138,7 @@ const CreatePlant = props => {
 
 
         if (name.length && fullName.length && description.length && images) {
-            axios.post('http://127.0.0.1:8000/plants/createplant/', formData)
+            axios.post('https://ali10.pythonanywhere.com/plants/createplant/', formData)
             alert('نمایش اولیه ی گیاه')
             // send to server
         } else {

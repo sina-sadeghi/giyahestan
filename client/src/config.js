@@ -1,7 +1,7 @@
 // import Storage from "./core/services/Storage";
 
 const config = {
-    baseUrl: 'http://127.0.0.1:8000/',
+    baseUrl: 'https://ali10.pythonanywhere.com/',
     // socketUrl: 'wss://core.reply.ir/',
 
     // baseUrl: 'https://core.replytodm.com/',
