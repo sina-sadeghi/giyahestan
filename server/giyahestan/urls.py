@@ -20,7 +20,7 @@ urlpatterns = [
     path('plants/plants_list',v.plants_list.as_view()),
     path('plants/p', v.p),
     path('account/',include('account.urls')),
-    path('plants/createplant/', v.CreatePlant.as_view(), name='create'),
+    path('plants/plant/', v.CreatePlant.as_view(), name='create'),
     path("plants/plant/", v.seetextofurl, name="ss"),
     path("tag/",v.tagslist,name="tags")
 ]

@@ -21,16 +21,12 @@ const SignUp = props => {
         login: 1,
     }
 
-    const [step, setStep] = useState(1)
-
     const [fields, setFields] = useState([
         {label: _.init('lbl_sign_up__username_label'), value: '', validations: []},
         {label: _.init('lbl_sign_up__password_label'), value: '', validations: ['required', 'length']},
     ])
     const [fieldsStatus, setFieldsStatus] = useState([{code: statusField.empty}, {code: statusField.empty}])
     const [passType, setPassType] = useState(null)
-
-    const [code, setCode] = useState('')
 
 
     useEffect(() => {
@@ -116,8 +112,7 @@ const SignUp = props => {
             if (!statuses.find(_status => _status.code === statusField.error)) {
                 props.loading(true);
                 account.signUpLogin(data).then(res => {
-                    props.alert({type: 'suc', message: res.message})  //todo:: بعد از امکان ارسال ایمیل این قسمت review شود
-                    setStep(2)
+                    props.alert({type: 'suc', message: res.message})
                     props.loading(false);
                 }).catch(err => {
                     console.error(err)
@@ -128,92 +123,56 @@ const SignUp = props => {
         }
     }
 
-    const setCodeSignUp = () => {
-        //todo:: این قسمت کلا باید عوض بشه بعدا
-        const data = {
-            email: fields[0].value,
-            password: fields[1].value,
-        }
-
-        props.loading(true);
-        account.signUpLogin(data).then(res => {
-            props.alert({type: 'suc', message: res.message})
-            props.loading(false);
-            Storage.setToken(res.Token)
-        }).catch(err => {
-            console.error(err)
-            props.loading(false);
-            props.alert({type: 'err', message: err.message})
-        })
-    }
 
 
 
-    switch(step) {
-        case 1:
-            return (
-                <div className={"sign-up"}>
-                    <img src={plant} alt={'background'} className={'sign-up__background'}/>
-                    <div className={"form-box"}>
-                        <p className={"form-box__title"}>{_.init('lbl_sign_up__title')}</p>
-                        <Field
-                            key={1}
-                            type={'text'}
-                            label={_.init('lbl_sign_up__username_label')}
-                            icon={'fa-regular fa-envelope'}
-                            description={_.init('lbl_sign_up__username_description')}
-                            status={fieldsStatus[0]}
-                            value={fields[0].value}
-                            change={e => fieldsStatus[0].code !== statusField.loading ? updateValue(0, e.target.value.trim()) : null}
-                        />
 
-                        {passType in [0, 1] &&
-                        <Field
-                            key={2}
-                            type={'password'}
-                            label={_.init('lbl_sign_up__password_label')}
-                            icon={passType === typesPass.signUp ? 'fa-regular fa-lock' : 'fa-regular fa-unlock'}
-                            description={_.init(`lbl_sign_up__password_description___type_${passType}`)}
-                            status={fieldsStatus[1]}
-                            value={fields[1].value}
-                            change={e => updateValue(1, e.target.value.trim())}
-                        />}
 
-                        <Button type={passType in [0, 1] ? 'primary' : 'disabled'} action={action}>
-                            {passType === 1 && 'ورود'}
-                            {passType === 0 && 'ارسال کد'}
-                            {passType === null && 'چی بنویسم؟'}
-                        </Button>
-                        {passType === 1 && <Link to={'reset-password'} className={'sign-up__forget-password'}>فراموشی رمز عبور</Link>}
-                    </div>
-                </div>
-            );
+    return (
+        <div className={"sign-up"}>
+            <img src={plant} alt={'background'} className={'sign-up__background'}/>
+            <div className={"form-box"}>
+                <p className={"form-box__title"}>
+                    {_.init('lbl_sign_up__title')}
+                    {passType !== null && <smile> (
+                        {passType === 1 && 'ورود'}
+                        {passType === 0 && 'ثبت نام'}
+                        )</smile>}
+                </p>
+                <Field
+                    key={1}
+                    type={'text'}
+                    label={_.init('lbl_sign_up__username_label')}
+                    icon={'fa-regular fa-envelope'}
+                    description={_.init('lbl_sign_up__username_description')}
+                    status={fieldsStatus[0]}
+                    value={fields[0].value}
+                    change={e => fieldsStatus[0].code !== statusField.loading ? updateValue(0, e.target.value.trim()) : null}
+                />
 
-        case 2:
-            return (
-                <div className={"sign-up"}>
-                    <img src={plant} alt={'background'} className={'sign-up__background'}/>
-                    <div className={"form-box"}>
-                        <p className={"form-box__title"}>{_.init('lbl_sign_up__title')}</p>
-                        <Field
-                            key={3}
-                            type={'text'}
-                            label={_.init('lbl_sign_up__code_label')}
-                            icon={'fa-regular fa-envelope'}
-                            description={_.init('lbl_sign_up__code_description')}
-                            status={{code: statusField.empty}}
-                            value={code}
-                            change={e => setCode(e.target.value)}
-                        />
+                {passType in [0, 1] &&
+                <Field
+                    key={2}
+                    type={'password'}
+                    label={_.init('lbl_sign_up__password_label')}
+                    icon={passType === typesPass.signUp ? 'fa-regular fa-lock' : 'fa-regular fa-unlock'}
+                    description={_.init(`lbl_sign_up__password_description___type_${passType}`)}
+                    status={fieldsStatus[1]}
+                    value={fields[1].value}
+                    change={e => updateValue(1, e.target.value.trim())}
+                />}
 
-                        <Button type={code.length ? 'primary' : 'disabled'} action={setCodeSignUp}>{_.init('lbl_key_word__ok')}</Button>
-                        <i onClick={() => setStep(1)} title={'بازگشت به صفحه قبل'}
-                           className={'fa-solid fa-arrow-left-long sign-up__back'}/>
-                    </div>
-                </div>
-            )
+                {passType !== null &&
+                <Button type={passType in [0, 1] ? 'primary' : 'disabled'} action={action}>
+                    {passType === 1 && 'ورود'}
+                    {passType === 0 && 'ارسال ایمیل'}
+                </Button>
+                }
+                {passType === 1 && <Link to={'reset-password'} className={'sign-up__forget-password'}>فراموشی رمز عبور</Link>}
+            </div>
+        </div>
+    );
 
-    }
 
 }
 export default SignUp;

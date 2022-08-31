@@ -13,6 +13,11 @@
     margin: 22px 0 60px;
   }
 
+  .field_type_input > .fa-eye,
+  .field_type_input > .fa-eye-slash {
+    cursor: pointer;
+  }
+
   .field_type_input > *:not(.filed__box) {
     flex: 1;
   }

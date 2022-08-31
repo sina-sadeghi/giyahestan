@@ -4,12 +4,16 @@ class Storage {
         localStorage.setItem('token', token)
     }
 
-    static getToken(token) {
-        return localStorage.getItem(token)
+    static getToken() {
+        return localStorage.getItem('token')
     }
 
     static setUser(user) {
         localStorage.setItem('user', JSON.stringify(user))
+    }
+
+    static getUser() {
+        return JSON.parse(localStorage.getItem('user'))
     }
 }
 

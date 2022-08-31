@@ -1,6 +1,6 @@
 import './createPlant.scss';
 import React, {useState, useEffect, useRef} from 'react';
-import axios from 'axios';
+import Plant from '../../../../core/api/plant/plant';
 
 
 const CreatePlant = props => {
@@ -137,10 +137,17 @@ const CreatePlant = props => {
         formData.append('reproduce', 2);
 
 
-        if (name.length && fullName.length && description.length && images) {
-            axios.post('https://ali10.pythonanywhere.com/plants/createplant/', formData)
+        if (name.length && fullName.length && description.length && !!poster) {
+            const plant = new Plant()
+            plant.createPlant(formData).then(res => {
+                props.alert({type: 'suc', message: res.message})
+                props.loading(false)
+            }).catch(err => {
+                console.error(err)
+                props.loading(false);
+                props.alert({type: 'err', message: err.message})
+            })
             alert('نمایش اولیه ی گیاه')
-            // send to server
         } else {
             if (!name.length)
                 props.alert({type: 'err', message: 'فیلد نام خالی است'})
