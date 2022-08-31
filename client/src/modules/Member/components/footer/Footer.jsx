@@ -13,7 +13,7 @@ const Footer = () => {
             <br/>
             <Link to={'/plant/1'}>plant</Link>
             <br/>
-            {!!Storage.getUser().is_staff && <Link to={'/create-plant'}>create plant</Link>}
+            {!!Storage.getUser()?.is_staff && <Link to={'/create-plant'}>create plant</Link>}
             <br/><br/>
             i'm Footer
         </div>
