@@ -1,4 +1,5 @@
 import fa from '../../lang/fa';
+import en from "../../lang/en";
 
 class Translate {
 
@@ -7,7 +8,13 @@ class Translate {
     }
 
     static init(label, items = null) {
-        let subject = fa[label] ? fa[label] : label;
+        console.log(items)
+        const lang = 'fa'
+        let subject = ''
+        if (lang === 'fa')
+            subject = fa[label] ? fa[label] : label;
+        if (lang === 'en')
+            subject = en[label] ? en[label] : label;
         if (items)
             items.map(item => subject = subject.replace("item", item))
         return subject;

@@ -1,0 +1,154 @@
+@media only screen and (max-width: 450px) {
+  .home {
+
+  }
+}
+
+@media only screen and (max-width: 760px) {
+  .home {
+    .board {
+      height: 40vw;
+
+      h2 {
+        font-size: 23px;
+        right: 13vw;
+        top: -62px;
+      }
+    }
+
+    .board__describe1 {
+      top: 15vw;
+      right: 3vw;
+      font-size: 13px;
+      width: 181px;
+    }
+
+    .board__describe2 {
+      display: none;
+    }
+
+    .board__img1 {
+      top: 20vw;
+      left: 13vw;
+    }
+
+    .board__img2 {
+      top: 5vw;
+      left: 11vw;
+    }
+
+    .board__img3 {
+      top: 6vw;
+      left: 18vw;
+    }
+
+    .board__img4 {
+      top: 13vw;
+      left: 11vw;
+    }
+
+    .board__background {
+      height: 40vw;
+      opacity: 0.05;
+      right: 26vw;
+    }
+
+    .group__body {
+      flex-wrap: wrap;
+    }
+
+    .group__item {
+      margin: 10px 0;
+    }
+
+    .group__image {
+      height: 30vw;
+      width: 22vw;
+    }
+
+    .group__name {
+      font-size: 13px;
+    }
+
+    .similar-plant__score {
+      display: none;
+    }
+
+    .similar-plant__image {
+      height: 30vw;
+    }
+
+    .similar-plant__item {
+      min-width: 38vw;
+    }
+
+    .amazing__img {
+      width: 120px;
+      height: 170px;
+      margin: 0 auto 7px;
+    }
+
+    .amazing__body {
+      padding: 8px 0;
+      overflow-x: scroll;
+    }
+
+    .amazing__items {
+      padding: 7px 12px;
+      margin: 0 10px;
+      display: inline-block;
+      width: 143px;
+    }
+
+    .article__describe {
+      font-size: 11px;
+    }
+
+    .article__body {
+      overflow-x: scroll;
+    }
+
+    .article__img {
+      display: none;
+    }
+
+    .article__item-body {
+      display: block;
+    }
+
+    .article__item {
+      width: 75vw;
+      margin: 0 7px 8px;
+    }
+
+    .article__item-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 13px;
+      margin: 11px;
+    }
+
+    .article__describe {
+      height: 68px;
+      text-align: right;
+      line-clamp: 4;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+    }
+
+    .article__item-more {
+      float: left;
+    }
+
+    .article__more button {
+      font-size: 12px;
+      padding: 6px 46px;
+      margin: 0 6px;
+    }
+
+    .question__item {
+      margin: 3px 6px;
+    }
+  }
+}

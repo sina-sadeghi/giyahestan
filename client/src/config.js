@@ -7,7 +7,8 @@ const config = {
     // baseUrl: 'http://127.0.0.1:8000/',
     // socketUrl: 'ws://192.168.100.94:6080/',
 
-    baseUrl: 'https://giyahdoon.ir/',
+    // baseUrl: 'https://giyahdoon.ir/server/',
+    baseUrl: 'https://server.giyahdoon.ir/',
     // socketUrl: 'wss://core.reply.negin:6085/',
 
     // root:'http://localhost:3000/',

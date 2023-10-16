@@ -1,7 +1,6 @@
 {
   "name": "tailwind-project",
-  "proxy": "http://localhost:5000",
-  "homepage": "./",
+  "homepage": "https://giyahdoon.ir/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -12,7 +12,7 @@ $color: (
         error: #dc0707,
 );
 
-@mixin text($size: 15px, $weight: normal, $line: 1, $color: map_get($color, text-color), $dealingLong: false) {
+@mixin text($size: 15px, $weight: normal, $line: 1.2, $color: map_get($color, text-color), $dealingLong: false) {
   font-size: $size;
   font-weight: $weight;
   line-height: $line;

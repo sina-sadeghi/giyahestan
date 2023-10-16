@@ -10,6 +10,7 @@ import Loading from "../shared/loading/Loading";
 import '../assets/icons/style.css';
 import './font.scss';
 import '../assets/icons/fontawesome/all.min.css';
+import Page404 from "../shared/page404/Page404";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
                                     <Route path={route.path} element={<Router {...route}/>}/>
                                 ))
                             ))}
+                            <Route path="*" element={<Page404 to="/" />} />
                         </Routes>
                     </BrowserRouter>
                 </ClearBrowserCacheBoundary>

@@ -1,19 +1,32 @@
 .header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   background-color: #dddddd;
-  border-bottom: 2px solid #363636;
+  border-bottom: 2px solid #848484;
   align-items: center;
   justify-content: space-between;
   padding: 5px 0;
 
+  .header__right-section {
+    margin-right: 6px;
+    display: grid;
+    grid-template-columns: 25px 2fr 1fr;
+    align-items: center;
+  }
 
   .header__menu-button {
     cursor: pointer;
   }
 
   .header__logo {
-    border-radius: 4px;
-    cursor: pointer;
+    width: 75px;
+    height: 75px;
+
+    img {
+      border-radius: 4px;
+      width: 75px;
+      height: 75px;
+    }
   }
 
   .header__search {
@@ -23,7 +36,8 @@
     border-radius: 3px;
     padding: 2px 9px;
     color: #333;
-    width: 300px;
+    width: 350px;
+    height: 35px;
   }
 
   .header__login {
@@ -32,6 +46,6 @@
     border-radius: 3px;
     border: 2px solid #0080009c;
     background: #c4e3c1;
-    color: #333;
+    color: #0e8803;
   }
 }

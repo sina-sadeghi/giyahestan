@@ -1,0 +1,32 @@
+@media only screen and (max-width: 760px) {
+  .footer {
+
+    .connection__title {
+      font-size: 21px;
+      display: block;
+      margin: 0 25px 12px;
+    }
+
+    .connection__instagram {
+      margin-right: 10px;
+    }
+
+    .about-us_describe {
+      margin: 0 25px 0 15px;
+    }
+  }
+}
+
+@media only screen and (min-width: 760px) {
+
+  .footer {
+    grid-template-columns: 1fr auto;
+
+
+    .question {
+      grid-column: 2;
+      grid-row: 1/3;
+    }
+  }
+
+}

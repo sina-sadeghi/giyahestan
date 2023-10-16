@@ -1,0 +1,65 @@
+//overflow: hidden;
+
+.card {
+  position: relative;
+  display: inline-block;
+  width: 212px;
+  text-align: center;
+  padding: 5px;
+  box-shadow: 0 0 5px #6e6e6e;
+  margin: 10px 6px;
+  border-radius: 4px;
+
+  img {
+    width: 200px;
+    height: 200px;
+  }
+
+  .card__score {
+    text-align: center;
+    color: gold;
+    margin: 3px 0;
+  }
+
+  .card__description {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: -15px;
+    right: 0;
+    border-radius: 4px;
+    color: transparent;
+    transition: all 0.2s ease-in;
+
+    i {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      margin: 10px;
+      float: right;
+      transition: transform 0.1s linear;
+    }
+
+    p {
+      font-size: 20px;
+    }
+  }
+}
+
+.card:hover {
+  .card__description {
+    color: #dedede;
+    background: #00000090;
+
+    i:hover {
+      transform: perspective(500px) translateZ(45px);
+    }
+
+    p {
+      text-shadow: 0 0 3px black;
+    }
+  }
+}
