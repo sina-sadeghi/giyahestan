@@ -27,6 +27,8 @@ const SignUp = props => {
     ])
     const [fieldsStatus, setFieldsStatus] = useState([{code: statusField.empty}, {code: statusField.empty}])
     const [passType, setPassType] = useState(null)
+    const [confirmEmail, setConfirmEmail] = useState(false)
+    const [code, setCode] = useState('')
 
 
     useEffect(() => {
@@ -64,19 +66,20 @@ const SignUp = props => {
 
     const getTypeLogin = value => {
         setFieldsStatus([{code: statusField.loading}, {code: statusField.empty}])
-
-        account.signUpOrLogin({
-            email: fields[0].value
-        }).then(res => {
-            if (res.Membership)
-                setPassType(typesPass.login)
-            else
-                setPassType(typesPass.signUp)
-            setFieldsStatus([{code: statusField.success}, {code: statusField.empty}])
-        }).catch(err => {
-            console.error(err)
-            setFieldsStatus([{code: statusField.success}, {code: statusField.empty}])
-        })
+        setPassType(typesPass.signUp)
+        setFieldsStatus([{code: statusField.success}, {code: statusField.empty}])
+        // account.signUpOrLogin({
+        //     email: fields[0].value
+        // }).then(res => {
+        //     if (res.Membership)
+        //         setPassType(typesPass.login)
+        //     else
+        //         setPassType(typesPass.signUp)
+        //     setFieldsStatus([{code: statusField.success}, {code: statusField.empty}])
+        // }).catch(err => {
+        //     console.error(err)
+        //     setFieldsStatus([{code: statusField.success}, {code: statusField.empty}])
+        // })
     }
 
 
@@ -111,14 +114,17 @@ const SignUp = props => {
             setFieldsStatus(statuses)
             if (!statuses.find(_status => _status.code === statusField.error)) {
                 props.loading(true);
-                account.signUpLogin(data).then(res => {
-                    props.alert({type: 'suc', message: res.message})
-                    props.loading(false);
-                }).catch(err => {
-                    console.error(err)
-                    props.loading(false);
-                    props.alert({type: 'err', message: err.message})
-                })
+                props.alert({type: 'suc', message: 'کد تایید به ایمیل شما ارسال شد'})
+                props.loading(false);
+                setConfirmEmail(true)
+                // account.signUpLogin(data).then(res => {
+                //     props.alert({type: 'suc', message: res.message})
+                //     props.loading(false);
+                // }).catch(err => {
+                //     console.error(err)
+                //     props.loading(false);
+                //     props.alert({type: 'err', message: err.message})
+                // })
             }
         }
     }
@@ -139,7 +145,7 @@ const SignUp = props => {
                         {passType === 0 && 'ثبت نام'}
                         )</smile>}
                 </p>
-                <Field
+                {!confirmEmail && <><Field
                     key={1}
                     type={'text'}
                     label={_.init('lbl_sign_up__username_label')}
@@ -169,6 +175,21 @@ const SignUp = props => {
                 </Button>
                 }
                 {passType === 1 && <Link to={'reset-password'} className={'sign-up__forget-password'}>فراموشی رمز عبور</Link>}
+                </>}
+                {confirmEmail && <><Field
+                    key={1}
+                    type={'text'}
+                    label={_.init('کد تایید')}
+                    icon={'fa-regular fa-envelope'}
+                    description={_.init('کد ایمیل شده را وارد کنید')}
+                    status={fieldsStatus[0]}
+                    value={code}
+                    change={e => setCode(e.target.value)}
+                />
+                    <Button type={'primary'} action={() => props.alert({type: 'err', message: 'کد نادرست است'})}>
+                        {'تایید'}
+                    </Button>
+                </>}
             </div>
         </div>
     );

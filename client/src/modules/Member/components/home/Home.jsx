@@ -1,6 +1,7 @@
 import './home.scss'
 import './home-device.scss'
 import React, {useState} from 'react';
+import {Link} from "react-router-dom";
 import Image from "../../../../shared/image/Image";
 import similarPlant1 from "../../../../assets/image/6.jpg";
 import similarPlant2 from "../../../../assets/image/7.jpg";
@@ -104,7 +105,7 @@ const Home = props => {
     }
 
     const initSimilarPlant = (name, src, ribbon) => {
-        return (
+        return (<Link to={'/plant/15'}>
             <div className={'similar-plant__item'}>
                 {!!ribbon && <div className="similar-plant__ribbon-wrapper">
                     <div className="similar-plant__ribbon">{ribbon}</div>
@@ -114,6 +115,7 @@ const Home = props => {
                 <span className={'similar-plant__score'}>{initStars}</span>
                 <p className="similar-plant__name">{name}</p>
             </div>
+            </Link>
         )
     }
 
